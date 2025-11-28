@@ -7,7 +7,6 @@
   <title>大埔火災 - 物資資訊整合平台</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
     rel="stylesheet">
@@ -18,9 +17,7 @@
         extend: {
           fontFamily: { sans: ['Inter', 'Noto Sans TC', 'sans-serif'] },
           colors: {
-            brand: {
-              50: '#fff1f2', 100: '#ffe4e6', 500: '#f43f5e', 600: '#e11d48', 900: '#881337',
-            }
+            brand: { 50: '#fff1f2', 100: '#ffe4e6', 500: '#f43f5e', 600: '#e11d48', 900: '#881337' }
           }
         },
       },
@@ -33,7 +30,6 @@
     {
       "imports": {
         "react": "https://esm.sh/react@18.2.0",
-        "react/": "https://esm.sh/react@18.2.0/",
         "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
         "lucide-react": "https://esm.sh/lucide-react@0.263.1",
         "html2canvas": "https://esm.sh/html2canvas@1.4.1"
@@ -42,8 +38,6 @@
     </script>
 
   <style>
-    /* 如果你的 index.css 里有代码，请把内容全部复制粘贴到这里！ */
-    /* 如果是空的或者只有 Tailwind 指令，留空也没事 */
     body {
       background-color: #f8fafc;
     }
@@ -57,38 +51,228 @@
   <script type="text/babel" data-type="module">
     import React, { useState, useEffect } from 'react';
     import { createRoot } from 'react-dom/client';
-    // 这一行是为了防止图标库报错
-    import * as LucideReact from 'lucide-react';
-    import html2canvas from 'html2canvas';
+    import { Flame, Info, Menu, X, BarChart3, ExternalLink } from 'lucide-react';
 
-    // --- ⬇️ 请执行以下操作 ⬇️ ---
+    // ==========================================
+    // 🚨 临时替身区域 (Mock Components)
+    // 因为你没给我 components 文件夹里的代码，
+    // 我先造这些简单的壳子，防止白屏报错。
+    // ==========================================
 
-    // 1. 用记事本打开你项目里的 `index.tsx` 文件。
-    // 2. 复制除了最上面 `import` 开头之外的所有代码。
-    // 3. 把代码粘贴在这个位置。
+    const SmartInput = ({ onEntriesParsed }) => (
+      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <h3 className="font-bold text-slate-700">智能輸入 (SmartInput)</h3>
+        <p className="text-sm text-slate-500 mb-2">此处原本是 AI 分析框，由于缺少代码暂时无法使用。</p>
+        <button onClick={() => alert('请上传 SmartInput.tsx 代码以激活此功能')} className="bg-blue-600 text-white px-4 py-2 rounded">模拟添加</button>
+      </div>
+    );
 
-    // --- 粘贴开始 ---
+    const StatsCards = ({ stats }) => (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-500">需求: {stats.totalNeeds}</div>
+        <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500">提供: {stats.totalOffers}</div>
+        <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500">已完成: {stats.completed}</div>
+        <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-orange-500">緊急: {stats.highUrgency}</div>
+      </div>
+    );
 
-    const rootElement = document.getElementById('root');
-    if (!rootElement) {
-      throw new Error("Could not find root element to mount to");
+    const ReliefTable = ({ entries }) => (
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="p-4 border-b bg-slate-50 font-bold">物資列表 (ReliefTable)</div>
+        <div className="p-4">
+          {entries.map(e => (
+            <div key={e.id} className="p-2 border-b flex justify-between">
+              <span>{e.type === 'NEED' ? '🔴 需求' : '🟢 提供'}: {e.item} ({e.quantity})</span>
+              <span className="text-slate-500">{e.location}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    const LocationStatusBoard = ({ locations }) => (
+      <div className="mb-8 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {locations.slice(0, 3).map(loc => (
+          <div key={loc.id} className="bg-white p-4 rounded-xl border border-slate-200">
+            <div className="font-bold">{loc.location_name}</div>
+            <div className="text-sm text-slate-500">{loc.current_status}</div>
+          </div>
+        ))}
+        <div className="col-span-full text-center text-slate-400 text-sm">...更多地點 (由於缺少組件代碼，僅顯示部分)</div>
+      </div>
+    );
+
+    // 其他简单的占位符
+    const SuppliesSummary = ({ isOpen, onClose }) => isOpen ? <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"><div className="bg-white p-8 rounded">統計摘要 (缺代碼)<button onClick={onClose} className="ml-4 bg-gray-200 px-2">關閉</button></div></div> : null;
+    const SFExpressNotice = () => <div className="bg-slate-800 text-white p-4 rounded-xl">順豐通告 (缺代碼)</div>;
+    const EmotionalSupportCard = () => <div className="bg-pink-50 text-pink-800 p-4 rounded-xl">情緒支援 (缺代碼)</div>;
+
+
+    // ==========================================
+    // 💾 原始数据 (从你的代码里搬过来的)
+    // ==========================================
+
+    const MOCK_INITIAL_DATA = [
+      {
+        id: '1', type: 'NEED', category: '食品', item: '便當/熱食', quantity: '50 份',
+        location: '大埔體育館避難中心', contactInfo: '陳社工 9123 4567',
+        urgency: 'HIGH', status: 'PENDING', timestamp: Date.now() - 1000 * 60 * 30,
+        originalMessage: '急！避難中心缺50個便當，老人多，需要熱食。', notes: '需包含 10 份素食',
+      },
+      {
+        id: '2', type: 'OFFER', category: '交通', item: '7人車義載', quantity: '2 部車',
+        location: '大埔墟站 A 出口', contactInfo: 'Gary 6666 7777',
+        urgency: 'MEDIUM', status: 'PENDING', timestamp: Date.now() - 1000 * 60 * 60,
+        originalMessage: '我可以出兩部車幫手運物資，係火車站等。', notes: '晚上 8 點後可出車',
+      }
+    ];
+
+    const STATIC_LOCATION_DATA = [
+      { "id": "loc-1", "location_name": "大埔社區會堂", "contacts": [{ "name": "Chester", "phone": "91786880" }], "current_status": "暫無特別註明", "needs_support": null },
+      { "id": "loc-2", "location_name": "文娛中心", "contacts": [{ "name": "Carman", "phone": "54463262" }], "current_status": "目前有大量人手及物資", "needs_support": false }
+    ];
+
+    // ==========================================
+    // 🚀 主程序 App (你的核心代码)
+    // ==========================================
+
+    function App() {
+      const [entries, setEntries] = useState(() => {
+        const saved = localStorage.getItem('relief_entries');
+        return saved ? JSON.parse(saved) : MOCK_INITIAL_DATA;
+      });
+
+      const [locations, setLocations] = useState(() => {
+        const saved = localStorage.getItem('relief_locations');
+        if (saved) return JSON.parse(saved);
+        return STATIC_LOCATION_DATA;
+      });
+
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+
+      useEffect(() => { localStorage.setItem('relief_entries', JSON.stringify(entries)); }, [entries]);
+      useEffect(() => { localStorage.setItem('relief_locations', JSON.stringify(locations)); }, [locations]);
+
+      const stats = {
+        totalNeeds: entries.filter(e => e.type === 'NEED' && e.status !== 'COMPLETED').length,
+        totalOffers: entries.filter(e => e.type === 'OFFER' && e.status !== 'COMPLETED').length,
+        completed: entries.filter(e => e.status === 'COMPLETED').length,
+        highUrgency: entries.filter(e => e.urgency === 'HIGH' && e.status !== 'COMPLETED').length,
+      };
+
+      const handleNewEntries = (newEntries) => setEntries(prev => [...newEntries, ...prev]);
+      const handleUpdateStatus = (id, newStatus) => setEntries(prev => prev.map(e => e.id === id ? { ...e, status: newStatus } : e));
+      const handleDelete = (id) => setEntries(prev => prev.filter(e => e.id !== id));
+      const handleEditEntry = (id, updatedEntry) => setEntries(prev => prev.map(e => e.id === id ? { ...e, ...updatedEntry, timestamp: Date.now() } : e));
+
+      const handleManualAdd = () => {
+        const id = `manual-${Date.now()}`;
+        const newEntry = {
+          id, type: 'NEED', category: '未分類', item: '新增物品', quantity: '1',
+          location: '待定', contactInfo: '無', urgency: 'MEDIUM', status: 'PENDING',
+          timestamp: Date.now(), originalMessage: '手動新增項目', notes: '',
+        };
+        setEntries(prev => [newEntry, ...prev]);
+        return newEntry;
+      };
+
+      const handleUpdateLocation = (id, updatedData) => setLocations(prev => prev.map(loc => loc.id === id ? { ...loc, ...updatedData } : loc));
+      const handleAddLocation = () => {
+        const id = `loc-${Date.now()}`;
+        const newLocation = { id, location_name: "新救援站點", contacts: [], current_status: "請更新...", needs_support: null };
+        setLocations(prev => [newLocation, ...prev]);
+      };
+      const handleDeleteLocation = (id) => setLocations(prev => prev.filter(loc => loc.id !== id));
+
+      return (
+        <div className="min-h-screen flex flex-col font-sans">
+          <SuppliesSummary
+            entries={entries} isOpen={isSummaryOpen} onClose={() => setIsSummaryOpen(false)}
+            onEdit={handleEditEntry} onDelete={handleDelete}
+          />
+
+          {/* Navbar */}
+          <header className="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between h-16 items-center">
+                <div className="flex items-center gap-2">
+                  <div className="bg-red-600 p-1.5 rounded-lg shadow-red-900/50 shadow-inner">
+                    <Flame className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-lg font-bold leading-tight tracking-tight">大埔火災支援協調</h1>
+                    <p className="text-[10px] text-slate-400 font-medium tracking-wide">RELIEF COORDINATOR</p>
+                  </div>
+                </div>
+
+                <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+                  <span className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700/50">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    系統即時運作中
+                  </span>
+                  <button onClick={() => setIsSummaryOpen(true)} className="flex items-center gap-2 text-white hover:text-brand-100 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-all">
+                    <BarChart3 className="w-4 h-4" /> 物資統計總覽
+                  </button>
+                </div>
+                <button className="md:hidden p-2 text-slate-300 hover:text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                  {mobileMenuOpen ? <X /> : <Menu />}
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex-grow bg-slate-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-900">即時物資調配中心</h2>
+                  <p className="text-slate-500 mt-1">整合 WhatsApp/WeChat 訊息，自動提取地點與需求。</p>
+                </div>
+              </div>
+
+              {/* 替换成了我的临时组件 */}
+              <StatsCards stats={stats} />
+              <LocationStatusBoard locations={locations} />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="space-y-6">
+                  {/* 替换成了我的临时组件 */}
+                  <SmartInput onEntriesParsed={handleNewEntries} />
+                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                    <div className="flex gap-3">
+                      <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="font-bold text-blue-900 text-sm">如何使用？</h4>
+                        <p className="text-xs text-blue-800/80 mt-1 leading-relaxed">
+                          (功能開發中，請等待上傳完整組件)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div><SFExpressNotice /></div>
+                <div><EmotionalSupportCard /></div>
+              </div>
+
+              <div className="w-full">
+                {/* 替换成了我的临时组件 */}
+                <ReliefTable entries={entries} />
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-white border-t border-slate-200 py-8">
+            <div className="max-w-7xl mx-auto px-4 text-center">
+              <p className="text-slate-400 text-sm mb-2">此平台為緊急即時開發。</p>
+            </div>
+          </footer>
+        </div>
+      );
     }
 
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    );
-    // --- 粘贴结束 ---
-
-
-    // --- ⬇️ 启动代码 (必须保留在最下面) ⬇️ ---
-
-    // 如果你的主组件叫 App，就保持下面这样；如果叫 Main，就把 <App /> 改成 <Main />
     const root = createRoot(document.getElementById('root'));
-    root.render(<App />);
-
+    root.render(<App />); 
   </script>
 </body>
 
