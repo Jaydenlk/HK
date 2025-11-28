@@ -1,0 +1,5 @@
+{
+  "name": "Tai Po Fire Relief Coordinator",
+  "description": "A real-time coordination platform to aggregate fragmented information from WhatsApp/WeChat regarding the Tai Po fire incident. Features AI-powered parsing of unstructured messages to organize supplies, needs, and logistics.",
+  "requestFramePermissions": []
+}
