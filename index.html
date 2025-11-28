@@ -1,47 +1,95 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>大埔火災 - 物資資訊整合平台</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
-            },
-            colors: {
-              brand: {
-                50: '#fff1f2',
-                100: '#ffe4e6',
-                500: '#f43f5e',
-                600: '#e11d48',
-                900: '#881337',
-              }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大埔火災 - 物資資訊整合平台</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'Noto Sans TC', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#fff1f2', 100: '#ffe4e6', 500: '#f43f5e', 600: '#e11d48', 900: '#881337',
             }
-          },
+          }
         },
-      }
-    </script>
+      },
+    }
+  </script>
+
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
-    "html2canvas": "https://esm.sh/html2canvas@1.4.1"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react/": "https://esm.sh/react@18.2.0/",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+        "html2canvas": "https://esm.sh/html2canvas@1.4.1"
+      }
+    }
+    </script>
+
+  <style>
+    /* 如果你的 index.css 里有代码，请把内容全部复制粘贴到这里！ */
+    /* 如果是空的或者只有 Tailwind 指令，留空也没事 */
+    body {
+      background-color: #f8fafc;
+    }
+  </style>
 </head>
-  <body class="bg-slate-50 text-slate-900 antialiased">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body class="bg-slate-50 text-slate-900 antialiased">
+
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    import React, { useState, useEffect } from 'react';
+    import { createRoot } from 'react-dom/client';
+    // 这一行是为了防止图标库报错
+    import * as LucideReact from 'lucide-react';
+    import html2canvas from 'html2canvas';
+
+    // --- ⬇️ 请执行以下操作 ⬇️ ---
+
+    // 1. 用记事本打开你项目里的 `index.tsx` 文件。
+    // 2. 复制除了最上面 `import` 开头之外的所有代码。
+    // 3. 把代码粘贴在这个位置。
+
+    // --- 粘贴开始 ---
+
+    const rootElement = document.getElementById('root');
+    if (!rootElement) {
+      throw new Error("Could not find root element to mount to");
+    }
+
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+    // --- 粘贴结束 ---
+
+
+    // --- ⬇️ 启动代码 (必须保留在最下面) ⬇️ ---
+
+    // 如果你的主组件叫 App，就保持下面这样；如果叫 Main，就把 <App /> 改成 <Main />
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+
+  </script>
+</body>
+
 </html>
